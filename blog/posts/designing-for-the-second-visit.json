@@ -1,0 +1,31 @@
+{
+  "title": "Designing for the second visit",
+  "date": "2026-08-18",
+  "excerpt": "Most product design is about the first impression. The landing page, the empty state, the onboarding flow. But the real relationship begins later, when someone comes back and expects to find things where they left them…",
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "Most product design is about the first impression. The landing page, the empty state, the onboarding flow. But the real relationship begins later, when someone comes back and expects to find things where they left them."
+    },
+    {
+      "type": "paragraph",
+      "content": "The second visit is a test of memory. Not the user’s memory, but yours. Did you make a promise on the first visit that you cannot keep on the second? Did you confuse delight with clarity? Did you build a storefront when what they needed was a desk?"
+    },
+    {
+      "type": "heading",
+      "content": "The furniture of a product"
+    },
+    {
+      "type": "paragraph",
+      "content": "Returning users do not need to be entertained. They need to be oriented. They need their work to be where they left it, their settings to behave, their shortcuts to still work. The best second visit is uneventful."
+    },
+    {
+      "type": "paragraph",
+      "content": "This is why I love designing after launch. The first version gives you a language. The second version gives you a chance to make that language coherent. You can remove the decorative bits that turned out to be noise. You can let the real habits show through."
+    },
+    {
+      "type": "paragraph",
+      "content": "A good product is not a performance. It is a place you return to. Design for the return."
+    }
+  ]
+}

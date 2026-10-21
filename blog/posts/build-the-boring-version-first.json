@@ -1,0 +1,39 @@
+{
+  "title": "Build the boring version first",
+  "date": "2026-09-11",
+  "excerpt": "Every ambitious project begins with a fantasy version of itself. The fantasy is beautiful, coherent, and almost entirely useless. The boring version is the one that teaches you something…",
+  "body": [
+    {
+      "type": "paragraph",
+      "content": "Every ambitious project begins with a fantasy version of itself. The fantasy is beautiful, coherent, and almost entirely useless. It solves problems you have not met yet and skips the problems that will actually determine whether the thing works."
+    },
+    {
+      "type": "paragraph",
+      "content": "The boring version is the one that teaches you something. It has one feature. It has a name you might change. It has a database schema you will be embarrassed by in six months. It also has contact with reality, which is more than the fantasy can say."
+    },
+    {
+      "type": "heading",
+      "content": "What boring buys you"
+    },
+    {
+      "type": "paragraph",
+      "content": "Boring is not the absence of ambition. It is ambition with its sleeves rolled up. It is choosing to learn the shape of the problem before you commit to an elegant answer. The first version is not a smaller version of the final thing. It is a question you ask the world."
+    },
+    {
+      "type": "list",
+      "items": [
+        "It gets used, which is the only feedback that matters.",
+        "It gives you a real edge to sharpen.",
+        "It makes the next decision smaller and more specific."
+      ]
+    },
+    {
+      "type": "paragraph",
+      "content": "There is a moment in every project when you can feel the fantasy trying to take over. It whispers that you should wait, rebuild, make it presentable. That is usually the moment to ship the awkward little thing and see what happens."
+    },
+    {
+      "type": "paragraph",
+      "content": "The boring version is not the destination. It is the first honest step."
+    }
+  ]
+}

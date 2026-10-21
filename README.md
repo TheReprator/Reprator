@@ -8,9 +8,9 @@ and a focused article layout.
 ## Requirements met
 
 - **Built with Astro.** Static output, no client framework.
-- **No Markdown for blogging.** Posts are typed objects in
-  `src/data/posts.ts`. Bodies are structured blocks (paragraph, heading, quote,
-  list), not `.md` files.
+- **No Markdown for blogging.** Every post is a JSON file in
+  `blog/posts/`. Bodies are structured blocks (paragraph, heading, quote, list),
+  not `.md` files.
 - **Pagination after 10 posts.** There are 14 sample posts, so `/` shows the
   first 10 and `/page/2/` shows the remaining 4. Pagination controls only appear
   when there is more than one page.
@@ -27,28 +27,37 @@ npm run check
 
 ## Writing a new post
 
-Add an object to the `posts` array in `src/data/posts.ts`:
+Create a JSON file in `blog/posts/`. The file name becomes the URL slug:
 
-```ts
+```text
+blog/posts/a-new-post.json
+→ /posts/a-new-post/
+```
+
+Each file uses this shape:
+
+```json
 {
-  slug: 'a-new-post',
-  title: 'A new post',
-  date: '2026-10-24',
-  excerpt: 'The short version shown on the index and in RSS.',
-  body: [
-    { type: 'paragraph', content: 'The first paragraph.' },
-    { type: 'heading', content: 'A section' },
-    { type: 'quote', content: 'A useful line.' },
-    { type: 'list', items: ['One', 'Two'] }
+  "title": "A new post",
+  "date": "2026-10-24",
+  "excerpt": "The short version shown on the index and in RSS.",
+  "body": [
+    { "type": "paragraph", "content": "The first paragraph." },
+    { "type": "heading", "content": "A section" },
+    { "type": "quote", "content": "A useful line." },
+    { "type": "list", "items": ["One", "Two"] }
   ]
 }
 ```
 
-The new post page is generated automatically at `/posts/a-new-post/`, and the
-feed at `/feed.xml` updates during the build. Pagination recalculates itself.
+The loader in `src/data/posts.ts` discovers every JSON file automatically. The
+new post page is generated, the RSS feed updates, and pagination recalculates
+itself during the build.
 
-Inline HTML is supported inside paragraph, heading, quote, list, and cite
-content, so links and emphasis work without a Markdown parser.
+The date must be `YYYY-MM-DD`, and file names must be lowercase and hyphenated.
+Inline HTML is supported inside paragraph, heading, quote, and list content, so
+links and emphasis work without a Markdown parser. See `blog/README.txt` for the
+full authoring notes.
 
 ## Customizing
 
@@ -106,10 +115,10 @@ at build time.
 
 ### 3. Publish future posts
 
-Edit `src/data/posts.ts`, then commit and push:
+Add or edit a JSON file in `blog/posts/`, then commit and push:
 
 ```sh
-git add src/data/posts.ts
+git add blog/posts
 git commit -m "Add a new post"
 git push
 ```
@@ -133,9 +142,12 @@ automatically.
 ## Structure
 
 ```
+blog/
+  posts/            One JSON file per blog post
+  README.txt        Authoring guide (plain text, not Markdown)
 src/
   components/       Author header, cards, pagination, article body, footer
-  data/             Site metadata and typed posts
+  data/             Site metadata and the blog JSON loader
   layouts/          Document shell and metadata
   pages/            Home, paginated archive, posts, about, RSS, 404
   styles/           Global CSS
