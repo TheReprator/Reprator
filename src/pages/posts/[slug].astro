@@ -44,21 +44,17 @@ const { previous, next } = getAdjacentPosts(post.slug);
   </article>
 
   <nav class="article-nav" aria-label="More posts">
-    {previous ? (
+    {previous && (
       <a class="article-nav__link" href={`/posts/${previous.slug}/`} rel="prev">
         <span class="article-nav__label">Previous post</span>
         <span class="article-nav__title">← {previous.title}</span>
       </a>
-    ) : (
-      <span />
     )}
-    {next ? (
+    {next && (
       <a class="article-nav__link article-nav__link--next" href={`/posts/${next.slug}/`} rel="next">
         <span class="article-nav__label">Next post</span>
         <span class="article-nav__title">{next.title} →</span>
       </a>
-    ) : (
-      <span />
     )}
   </nav>
 

@@ -698,6 +698,7 @@ a.pagination__page:hover {
 }
 
 .article-nav__link--next {
+  grid-column: 2;
   align-items: flex-end;
   text-align: right;
 }
@@ -881,6 +882,7 @@ a.pagination__page:hover {
   }
 
   .article-nav__link--next {
+    grid-column: 1;
     align-items: flex-start;
     text-align: left;
   }

@@ -174,7 +174,7 @@ export function getAdjacentPosts(slug: string): { previous?: Post; next?: Post }
   if (index === -1) return {};
 
   return {
-    previous: sortedPosts[index + 1],
-    next: sortedPosts[index - 1]
+    previous: sortedPosts[index - 1],
+    next: sortedPosts[index + 1]
   };
 }
