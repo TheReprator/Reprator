@@ -1,132 +1,88 @@
 /**
- * Blog content lives in `/blog/posts`, one JSON file per post.
+ * Blog content lives in `/blog/posts`, one folder per post.
  *
- * The file name becomes the URL slug. Adding a new JSON file is all that is
- * needed for Astro to generate its page, include it in the archive and RSS
- * feed, and recalculate pagination.
+ * blog/posts/my-post/index.astro
+ * → /posts/my-post/
+ *
+ * A post is a normal Astro component: write HTML, import images, and export
+ * its title, date, and excerpt from the frontmatter. No Markdown or JSON.
  */
-export type PostBlock =
-  | { type: 'paragraph'; content: string }
-  | { type: 'heading'; content: string }
-  | { type: 'quote'; content: string; cite?: string }
-  | { type: 'list'; items: string[] };
+import type { AstroComponentFactory } from 'astro/runtime/server/index.js';
 
 export interface Post {
   slug: string;
   title: string;
   date: string;
   excerpt: string;
-  body: PostBlock[];
+  Content: AstroComponentFactory;
 }
 
-type PostSource = Omit<Post, 'slug'>;
+type PostSource = Omit<Post, 'slug' | 'Content'>;
+type PostModule = PostSource & { default: AstroComponentFactory };
 
 export const POSTS_PER_PAGE = 10;
 
-const postModules = import.meta.glob<PostSource>('../../blog/posts/*.json', {
-  eager: true,
-  import: 'default'
+const postModules = import.meta.glob<PostModule>('../../blog/posts/*/index.astro', {
+  eager: true
 });
 
 const isNonEmptyString = (value: unknown): value is string =>
   typeof value === 'string' && value.trim().length > 0;
 
-function validateBlock(block: unknown, path: string, index: number): PostBlock {
-  if (!block || typeof block !== 'object') {
-    throw new Error(`${path}: body[${index}] must be an object.`);
-  }
-
-  const candidate = block as Record<string, unknown>;
-  const type = candidate.type;
-
-  if (type === 'paragraph' || type === 'heading' || type === 'quote') {
-    if (!isNonEmptyString(candidate.content)) {
-      throw new Error(`${path}: body[${index}].content is required.`);
-    }
-
-    if (type === 'quote' && candidate.cite !== undefined) {
-      if (!isNonEmptyString(candidate.cite)) {
-        throw new Error(`${path}: body[${index}].cite must be a non-empty string.`);
-      }
-
-      return { type, content: candidate.content, cite: candidate.cite };
-    }
-
-    return { type, content: candidate.content };
-  }
-
-  if (type === 'list') {
-    if (
-      !Array.isArray(candidate.items) ||
-      candidate.items.length === 0 ||
-      !candidate.items.every(isNonEmptyString)
-    ) {
-      throw new Error(
-        `${path}: body[${index}].items must be a non-empty array of strings.`
-      );
-    }
-
-    return { type, items: candidate.items };
-  }
-
-  throw new Error(
-    `${path}: body[${index}].type must be "paragraph", "heading", "quote", or "list".`
-  );
-}
-
 function validatePost(source: unknown, path: string): PostSource {
   if (!source || typeof source !== 'object') {
-    throw new Error(`${path}: a post must be a JSON object.`);
+    throw new Error(`${path}: a post must be an Astro component.`);
   }
 
   const candidate = source as Record<string, unknown>;
 
   if (!isNonEmptyString(candidate.title)) {
-    throw new Error(`${path}: "title" is required.`);
+    throw new Error(`${path}: export a non-empty "title".`);
   }
 
-  const parsedDate = isNonEmptyString(candidate.date)
-    ? new Date(`${candidate.date}T12:00:00Z`)
-    : null;
+  if (!isNonEmptyString(candidate.date)) {
+    throw new Error(`${path}: export a "date" in YYYY-MM-DD format.`);
+  }
 
   if (
-    !isNonEmptyString(candidate.date) ||
     !/^\d{4}-\d{2}-\d{2}$/.test(candidate.date) ||
-    !parsedDate ||
-    Number.isNaN(parsedDate.getTime()) ||
-    parsedDate.toISOString().slice(0, 10) !== candidate.date
+    Number.isNaN(new Date(`${candidate.date}T12:00:00Z`).getTime()) ||
+    new Date(`${candidate.date}T12:00:00Z`).toISOString().slice(0, 10) !==
+      candidate.date
   ) {
     throw new Error(`${path}: "date" must be a valid YYYY-MM-DD date.`);
   }
 
   if (!isNonEmptyString(candidate.excerpt)) {
-    throw new Error(`${path}: "excerpt" is required.`);
+    throw new Error(`${path}: export a non-empty "excerpt".`);
   }
 
-  if (!Array.isArray(candidate.body) || candidate.body.length === 0) {
-    throw new Error(`${path}: "body" must be a non-empty array of blocks.`);
+  if (typeof candidate.default !== 'function') {
+    throw new Error(`${path}: the post component could not be loaded.`);
   }
 
   return {
     title: candidate.title,
     date: candidate.date,
-    excerpt: candidate.excerpt,
-    body: candidate.body.map((block, index) =>
-      validateBlock(block, path, index)
-    )
+    excerpt: candidate.excerpt
   };
 }
 
-const postsWithSlugs = Object.entries(postModules).map(([path, source]) => {
-  const fileSlug = path.split('/').pop()?.replace(/\.json$/, '') ?? '';
+const postsWithSlugs = Object.entries(postModules).map(([path, module]) => {
+  const segments = path.split('/');
+  const fileSlug = segments[segments.length - 2] ?? '';
 
   if (!/^[a-z0-9]+(?:-[a-z0-9]+)*$/.test(fileSlug)) {
     throw new Error(
-      `${path}: the file name must be a lowercase, hyphenated slug.`
+      `${path}: the post folder must be a lowercase, hyphenated slug.`
     );
   }
 
-  return { ...validatePost(source, path), slug: fileSlug };
+  return {
+    ...validatePost(module, path),
+    slug: fileSlug,
+    Content: module.default
+  };
 });
 
 const duplicate = postsWithSlugs.find(

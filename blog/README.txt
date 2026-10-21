@@ -1,38 +1,84 @@
 BLOG DATA
 =========
 
-Every post lives in this folder as one JSON file. No Markdown is used.
+Every post is a folder with an index.astro file. No Markdown, no JSON.
 
-File name = URL slug
---------------------
-blog/posts/the-case-for-a-smaller-internet.json
+
+Folder name = URL slug
+----------------------
+
+blog/posts/the-case-for-a-smaller-internet/index.astro
 becomes
 https://your-site.com/posts/the-case-for-a-smaller-internet/
 
 
 Post format
 -----------
-{
-  "title": "The case for a smaller internet",
-  "date": "2026-10-18",
-  "excerpt": "The short version shown on the index and in RSS.",
-  "body": [
-    { "type": "paragraph", "content": "A paragraph. Inline HTML is allowed." },
-    { "type": "heading", "content": "A section heading" },
-    { "type": "quote", "content": "A pull quote." },
-    { "type": "list", "items": ["First point", "Second point"] }
-  ]
-}
+
+---
+export const title = "The case for a smaller internet";
+export const date = "2026-10-18";
+export const excerpt = "The short version shown on the index and in RSS.";
+---
+
+<p>A paragraph.</p>
+
+<h2>A section heading</h2>
+
+<blockquote>
+  <p>A pull quote.</p>
+</blockquote>
+
+<ul>
+  <li>First point</li>
+  <li>Second point</li>
+</ul>
+
+The three exports are required. Everything below the second "---" is normal
+HTML. Links, emphasis, figures, and captions all work as usual.
+
+
+Adding an image
+---------------
+
+Put the image beside the post:
+
+blog/posts/the-case-for-a-smaller-internet/
+  index.astro
+  images/studio.jpg
+
+Import it in the post frontmatter and render it with Astro's Image component:
+
+---
+import { Image } from "astro:assets";
+import studio from "./images/studio.jpg";
+
+export const title = "A post with an image";
+export const date = "2026-10-24";
+export const excerpt = "A short description.";
+---
+
+<p>Text before the image.</p>
+
+<Image src={studio} alt="A studio desk in afternoon light." />
+
+<p>Text after the image.</p>
+
+Astro optimizes the image at build time and gives it the correct URL. A normal
+<img> tag also works:
+
+<img src={studio.src} alt="A studio desk in afternoon light." />
+
 
 Rules
 -----
+
 - The date must be YYYY-MM-DD.
 - The excerpt is required.
-- The body must contain at least one block.
-- Allowed block types: paragraph, heading, quote, list.
-- File names must be lowercase and hyphenated.
-- Add a file and the post appears automatically.
+- Folder names must be lowercase and hyphenated.
+- Add a folder and the post appears automatically.
 - Ten posts per page; pagination recalculates itself.
+- Images are recommended at 1600px wide or larger.
+- Use descriptive alt text for every image.
 
-Images can live in this folder too (for example blog/images/) and be referenced
-with an absolute path from the built site.
+To make a new post, copy an existing folder, rename it, and replace the content.

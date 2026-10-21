@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorHeader from '../../components/AuthorHeader.astro';
-import ArticleBody from '../../components/ArticleBody.astro';
 import SubscribeForm from '../../components/SubscribeForm.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { site } from '../../data/site';
@@ -9,22 +8,24 @@ import {
   formatPostDate,
   getAllPosts,
   getAdjacentPosts,
-  type Post
+  getPostBySlug
 } from '../../data/posts';
 
 export function getStaticPaths() {
   return getAllPosts().map((post) => ({
-    params: { slug: post.slug },
-    props: { post }
+    params: { slug: post.slug }
   }));
 }
 
-interface Props {
-  post: Post;
+const { slug } = Astro.params;
+const post = slug ? getPostBySlug(slug) : undefined;
+
+if (!post) {
+  throw new Error(`Post not found: ${slug ?? '(missing slug)'}`);
 }
 
-const { post } = Astro.props;
 const { previous, next } = getAdjacentPosts(post.slug);
+const { Content } = post;
 ---
 
 <BaseLayout
@@ -40,7 +41,9 @@ const { previous, next } = getAdjacentPosts(post.slug);
       <time datetime={post.date}>{formatPostDate(post.date)}</time>
     </p>
     <h1 class="article__title">{post.title}</h1>
-    <ArticleBody blocks={post.body} />
+    <div class="article__body">
+      <Content />
+    </div>
   </article>
 
   <nav class="article-nav" aria-label="More posts">

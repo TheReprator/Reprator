@@ -1,6 +1,6 @@
 import type { APIRoute } from 'astro';
 import { site } from '../data/site';
-import { getAllPosts, type PostBlock } from '../data/posts';
+import { getAllPosts } from '../data/posts';
 
 export const prerender = true;
 
@@ -11,22 +11,6 @@ const escapeXml = (value: string) =>
     .replaceAll('>', '&gt;')
     .replaceAll('"', '&quot;')
     .replaceAll("'", '&apos;');
-
-const renderBlocks = (blocks: PostBlock[]) =>
-  blocks
-    .map((block) => {
-      if (block.type === 'paragraph') return `<p>${block.content}</p>`;
-      if (block.type === 'heading') return `<h2>${block.content}</h2>`;
-      if (block.type === 'quote') {
-        const cite = block.cite ? `<cite>${block.cite}</cite>` : '';
-        return `<blockquote><p>${block.content}</p>${cite}</blockquote>`;
-      }
-      if (block.type === 'list') {
-        return `<ul>${block.items.map((item) => `<li>${item}</li>`).join('')}</ul>`;
-      }
-      return '';
-    })
-    .join('\n');
 
 export const GET: APIRoute = ({ site: astroSite }) => {
   const base = astroSite ?? new URL(site.url);
@@ -49,13 +33,12 @@ export const GET: APIRoute = ({ site: astroSite }) => {
       <guid isPermaLink="true">${escapeXml(url)}</guid>
       <pubDate>${pubDate}</pubDate>
       <description>${escapeXml(post.excerpt)}</description>
-      <content:encoded><![CDATA[${renderBlocks(post.body)}]]></content:encoded>
     </item>`;
     })
     .join('');
 
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
-<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>${escapeXml(site.title)}</title>
     <link>${escapeXml(siteUrl)}</link>

@@ -8,9 +8,9 @@ and a focused article layout.
 ## Requirements met
 
 - **Built with Astro.** Static output, no client framework.
-- **No Markdown for blogging.** Every post is a JSON file in
-  `blog/posts/`. Bodies are structured blocks (paragraph, heading, quote, list),
-  not `.md` files.
+- **No Markdown for blogging.** Every post is a folder in `blog/posts/` with an
+  `index.astro` file. Posts are written as HTML, not `.md` files, and can import
+  images directly.
 - **Pagination after 10 posts.** There are 14 sample posts, so `/` shows the
   first 10 and `/page/2/` shows the remaining 4. Pagination controls only appear
   when there is more than one page.
@@ -27,37 +27,73 @@ npm run check
 
 ## Writing a new post
 
-Create a JSON file in `blog/posts/`. The file name becomes the URL slug:
+Create a folder in `blog/posts/` with an `index.astro` file. The folder name
+becomes the URL slug:
 
 ```text
-blog/posts/a-new-post.json
+blog/posts/a-new-post/index.astro
 → /posts/a-new-post/
 ```
 
-Each file uses this shape:
+Each post starts with three exports, followed by normal HTML:
 
-```json
-{
-  "title": "A new post",
-  "date": "2026-10-24",
-  "excerpt": "The short version shown on the index and in RSS.",
-  "body": [
-    { "type": "paragraph", "content": "The first paragraph." },
-    { "type": "heading", "content": "A section" },
-    { "type": "quote", "content": "A useful line." },
-    { "type": "list", "items": ["One", "Two"] }
-  ]
-}
+```astro
+---
+export const title = "A new post";
+export const date = "2026-10-24";
+export const excerpt = "The short version shown on the index and in RSS.";
+---
+
+<p>The first paragraph.</p>
+
+<h2>A section</h2>
+
+<blockquote>
+  <p>A useful line.</p>
+</blockquote>
+
+<ul>
+  <li>One</li>
+  <li>Two</li>
+</ul>
 ```
 
-The loader in `src/data/posts.ts` discovers every JSON file automatically. The
+The loader in `src/data/posts.ts` discovers every post folder automatically. The
 new post page is generated, the RSS feed updates, and pagination recalculates
 itself during the build.
 
-The date must be `YYYY-MM-DD`, and file names must be lowercase and hyphenated.
-Inline HTML is supported inside paragraph, heading, quote, and list content, so
-links and emphasis work without a Markdown parser. See `blog/README.txt` for the
-full authoring notes.
+The date must be `YYYY-MM-DD`, and folder names must be lowercase and hyphenated.
+See `blog/README.txt` for the full authoring notes.
+
+### Adding images
+
+Put images beside the post and import them. Astro optimizes them at build time:
+
+```text
+blog/posts/a-new-post/
+  index.astro
+  images/studio.jpg
+```
+
+```astro
+---
+import { Image } from 'astro:assets';
+import studio from './images/studio.jpg';
+
+export const title = "A new post";
+export const date = "2026-10-24";
+export const excerpt = "A post with a photograph.";
+---
+
+<p>Some text before the image.</p>
+
+<Image src={studio} alt="A studio desk in afternoon light." />
+
+<p>Some text after the image.</p>
+```
+
+A regular `<img>` tag also works with `studio.src` if you do not want Astro's
+image optimization.
 
 ## Customizing
 
@@ -115,7 +151,7 @@ at build time.
 
 ### 3. Publish future posts
 
-Add or edit a JSON file in `blog/posts/`, then commit and push:
+Add or edit a post folder in `blog/posts/`, then commit and push:
 
 ```sh
 git add blog/posts
@@ -143,11 +179,11 @@ automatically.
 
 ```
 blog/
-  posts/            One JSON file per blog post
+  posts/            One folder per post, with index.astro and optional images
   README.txt        Authoring guide (plain text, not Markdown)
 src/
-  components/       Author header, cards, pagination, article body, footer
-  data/             Site metadata and the blog JSON loader
+  components/       Author header, cards, pagination, footer
+  data/             Site metadata and the blog loader
   layouts/          Document shell and metadata
   pages/            Home, paginated archive, posts, about, RSS, 404
   styles/           Global CSS
