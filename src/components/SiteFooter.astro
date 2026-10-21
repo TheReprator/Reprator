@@ -1,0 +1,17 @@
+---
+import { site } from '../data/site';
+
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <p>
+    © {year} {site.name}
+    <span class="site-footer__sep" aria-hidden="true">·</span>
+    <a href="/about/">About</a>
+    <span class="site-footer__sep" aria-hidden="true">·</span>
+    <a href="/feed.xml">RSS</a>
+    <span class="site-footer__sep" aria-hidden="true">·</span>
+    Built with Astro
+  </p>
+</footer>

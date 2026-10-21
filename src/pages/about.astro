@@ -1,0 +1,82 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthorHeader from '../components/AuthorHeader.astro';
+import SubscribeForm from '../components/SubscribeForm.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { site } from '../data/site';
+---
+
+<BaseLayout
+  title="About"
+  description="About Mara Voss, an independent designer and developer in Copenhagen."
+>
+  <AuthorHeader compact showBio={false} showSubscribe={false} />
+
+  <section class="about">
+    <p class="about__eyebrow">About</p>
+    <h1 class="about__title">{site.name}</h1>
+    <p class="about__lede">
+      I make small, deliberate software for the web — and write about the parts
+      that don’t fit in a changelog.
+    </p>
+
+    <div class="about__body">
+      <p>
+        I’m an independent designer and developer in Copenhagen. For the past
+        decade I’ve worked at the seam between design and engineering: drawing
+        the interface, writing the front end, and staying close enough to the
+        backend to know when a simpler idea would be better.
+      </p>
+      <p>
+        Before working for myself, I led design at a small product studio and
+        spent a few years as a freelance developer. I’ve shipped tools for
+        writers, researchers, and people who make things with their hands. The
+        common thread is a preference for software that is quiet, legible, and
+        built to last longer than the average launch cycle.
+      </p>
+      <p>
+        This site is my notebook. It is a place for essays, observations, and
+        the occasional field report. No growth hacks, no algorithmic feed, no
+        reason for it to exist other than the pleasure of putting a thought
+        somewhere it can be found again.
+      </p>
+
+      <h2>Now</h2>
+      <p>
+        I’m building <em>Lumen</em>, a writing app for people who want fewer
+        features and more room to think. I take on a small number of design and
+        development projects each quarter. I’m also slowly restoring a 1987
+        bicycle, which is teaching me more about maintenance than any software
+        book has.
+      </p>
+
+      <h2>A few beliefs</h2>
+      <ul>
+        <li>The best interface is the one you stop noticing.</li>
+        <li>Small teams with long horizons make the most coherent things.</li>
+        <li>Software should let you leave without making you feel guilty.</li>
+        <li>The web is better when more of it belongs to individuals.</li>
+      </ul>
+
+      <h2>Elsewhere</h2>
+      <p>
+        You can write to me at
+        <a href={`mailto:${site.email}`}>{site.email}</a>. I read everything and
+        reply when I can. For new posts, use the <a href="/feed.xml">RSS feed</a> or
+        subscribe below.
+      </p>
+
+      <h2>Colophon</h2>
+      <p>
+        This site is built with <a href="https://astro.build/">Astro</a> and
+        plain CSS. Posts live in typed data rather than Markdown files. There is
+        no database, no tracking, and no JavaScript except the small script that
+        makes the subscribe form say hello.
+      </p>
+    </div>
+
+    <SubscribeForm />
+  </section>
+
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,30 @@
+---
+import type { Post } from '../data/posts';
+import { formatPostDate } from '../data/posts';
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const href = `/posts/${post.slug}/`;
+---
+
+<article class="post-card">
+  <header class="post-card__header">
+    <p class="post-card__date">
+      <time datetime={post.date}>{formatPostDate(post.date)}</time>
+    </p>
+    <h2 class="post-card__title">{post.title}</h2>
+  </header>
+
+  <p class="post-card__excerpt">{post.excerpt}</p>
+
+  <a class="post-card__link" href={href} aria-label={`Read “${post.title}”`}>
+    Read more
+  </a>
+
+  <div class="post-card__more" aria-hidden="true">
+    <span>Read more</span>
+  </div>
+</article>

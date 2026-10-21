@@ -1,0 +1,57 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthorHeader from '../../components/AuthorHeader.astro';
+import PostCard from '../../components/PostCard.astro';
+import Pagination from '../../components/Pagination.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import {
+  getAllPosts,
+  getPageCount,
+  getPostsForPage,
+  POSTS_PER_PAGE
+} from '../../data/posts';
+
+export function getStaticPaths() {
+  const totalPages = getPageCount();
+
+  return Array.from({ length: Math.max(0, totalPages - 1) }, (_, index) => {
+    const pageNumber = index + 2;
+    return {
+      params: { page: String(pageNumber) },
+      props: { pageNumber }
+    };
+  });
+}
+
+interface Props {
+  pageNumber: number;
+}
+
+const { pageNumber } = Astro.props;
+const totalPages = getPageCount();
+const totalPosts = getAllPosts().length;
+const pagePosts = getPostsForPage(pageNumber);
+const firstPost = (pageNumber - 1) * POSTS_PER_PAGE + 1;
+const lastPost = firstPost + pagePosts.length - 1;
+---
+
+<BaseLayout
+  title={`Page ${pageNumber}`}
+  description={`Page ${pageNumber} of writing by Mara Voss: notes on craft, software, and the long way around.`}
+>
+  <AuthorHeader />
+
+  <h1 class="sr-only">Writing by Mara Voss — page {pageNumber}</h1>
+
+  <section class="post-list" aria-label={`Posts, page ${pageNumber}`}>
+    {pagePosts.map((post) => <PostCard post={post} />)}
+    {totalPages > 1 && (
+      <p class="pagination__summary">
+        Showing posts {firstPost}–{lastPost} of {totalPosts}
+      </p>
+    )}
+    <Pagination current={pageNumber} total={totalPages} />
+  </section>
+
+  <SiteFooter />
+</BaseLayout>

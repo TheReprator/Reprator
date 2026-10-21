@@ -1,0 +1,31 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import AuthorHeader from '../components/AuthorHeader.astro';
+import PostCard from '../components/PostCard.astro';
+import Pagination from '../components/Pagination.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import { getAllPosts, getPageCount, getPostsForPage } from '../data/posts';
+
+const currentPage = 1;
+const totalPages = getPageCount();
+const totalPosts = getAllPosts().length;
+const pagePosts = getPostsForPage(currentPage);
+---
+
+<BaseLayout>
+  <AuthorHeader />
+
+  <h1 class="sr-only">Writing by Mara Voss</h1>
+
+  <section class="post-list" aria-label="Posts">
+    {pagePosts.map((post) => <PostCard post={post} />)}
+    {totalPages > 1 && (
+      <p class="pagination__summary">
+        Showing posts 1–{pagePosts.length} of {totalPosts}
+      </p>
+    )}
+    <Pagination current={currentPage} total={totalPages} />
+  </section>
+
+  <SiteFooter />
+</BaseLayout>

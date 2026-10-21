@@ -1,0 +1,143 @@
+# Mara Voss — a HEY World-inspired Astro blog
+
+A static, editorial personal blog built with Astro. The design follows the
+quiet, centered reading experience of [HEY World](https://world.hey.com/dhh):
+system typography, a narrow column, paper-like post cards, automatic dark mode,
+and a focused article layout.
+
+## Requirements met
+
+- **Built with Astro.** Static output, no client framework.
+- **No Markdown for blogging.** Posts are typed objects in
+  `src/data/posts.ts`. Bodies are structured blocks (paragraph, heading, quote,
+  list), not `.md` files.
+- **Pagination after 10 posts.** There are 14 sample posts, so `/` shows the
+  first 10 and `/page/2/` shows the remaining 4. Pagination controls only appear
+  when there is more than one page.
+
+## Commands
+
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # static output in dist/
+npm run preview
+npm run check
+```
+
+## Writing a new post
+
+Add an object to the `posts` array in `src/data/posts.ts`:
+
+```ts
+{
+  slug: 'a-new-post',
+  title: 'A new post',
+  date: '2026-10-24',
+  excerpt: 'The short version shown on the index and in RSS.',
+  body: [
+    { type: 'paragraph', content: 'The first paragraph.' },
+    { type: 'heading', content: 'A section' },
+    { type: 'quote', content: 'A useful line.' },
+    { type: 'list', items: ['One', 'Two'] }
+  ]
+}
+```
+
+The new post page is generated automatically at `/posts/a-new-post/`, and the
+feed at `/feed.xml` updates during the build. Pagination recalculates itself.
+
+Inline HTML is supported inside paragraph, heading, quote, list, and cite
+content, so links and emphasis work without a Markdown parser.
+
+## Customizing
+
+- Author name, bio, email, and site URL: `src/data/site.ts`
+- Production domain: set `SITE_URL` on Vercel (falls back to Vercel's
+  production domain automatically)
+- Visual system and dark mode: `src/styles/global.css`
+- Avatar and social card: `public/avatar.svg`, `public/og.jpg`
+
+The subscribe form is a front-end demo: it validates the address and shows a
+confirmation without sending data anywhere. Connect it to your newsletter
+provider by replacing the form action and removing the demo script in
+`src/components/SubscribeForm.astro`.
+
+## Deploying with GitHub + Vercel
+
+Everything lives in GitHub — code, posts, styles, and images. Vercel connects
+to that repository, builds the static site, and hosts it at a free
+`https://<project>.vercel.app` address. GitHub is the source of truth; Vercel is
+the host.
+
+> A `*.vercel.app` domain belongs to Vercel and can only serve a Vercel
+> deployment. It cannot be pointed at GitHub Pages. This project therefore uses
+> GitHub for version control and Vercel for hosting; no GitHub Pages workflow is
+> needed.
+
+### 1. Push the repository to GitHub
+
+Create an empty repository on GitHub (no README, no `.gitignore`), then run:
+
+```sh
+git remote add origin git@github.com:<your-username>/<your-repo>.git
+git push -u origin main --tags
+```
+
+The included `.github/workflows/ci.yml` runs `astro check` and a production
+build on every push and pull request.
+
+### 2. Import the repository into Vercel
+
+1. Go to [vercel.com/new](https://vercel.com/new) and sign in with GitHub.
+2. Choose **Import Git Repository** and select this repository.
+3. Vercel detects Astro automatically. Confirm:
+   - **Framework preset:** Astro
+   - **Build command:** `npm run build`
+   - **Output directory:** `dist`
+   - **Install command:** `npm install`
+4. Choose a project name. The free domain will be
+   `https://<project-name>.vercel.app`.
+5. Click **Deploy**.
+
+No environment variables are required. Optionally set `SITE_URL` to a custom
+domain later; canonical URLs, Open Graph metadata, and the RSS feed will use it
+at build time.
+
+### 3. Publish future posts
+
+Edit `src/data/posts.ts`, then commit and push:
+
+```sh
+git add src/data/posts.ts
+git commit -m "Add a new post"
+git push
+```
+
+Vercel rebuilds and deploys on every push to `main`. Pull requests get their own
+preview URLs automatically.
+
+### Alternative: Vercel CLI
+
+If you prefer the command line, run this from the project root after the GitHub
+repository exists:
+
+```sh
+npx vercel link
+npx vercel --prod
+```
+
+The Git integration is still recommended so every GitHub push deploys
+automatically.
+
+## Structure
+
+```
+src/
+  components/       Author header, cards, pagination, article body, footer
+  data/             Site metadata and typed posts
+  layouts/          Document shell and metadata
+  pages/            Home, paginated archive, posts, about, RSS, 404
+  styles/           Global CSS
+public/             Avatar, social image
+```

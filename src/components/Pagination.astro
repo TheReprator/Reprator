@@ -1,0 +1,52 @@
+---
+interface Props {
+  current: number;
+  total: number;
+}
+
+const { current, total } = Astro.props;
+const pages = Array.from({ length: total }, (_, index) => index + 1);
+const pageHref = (page: number) => (page === 1 ? '/' : `/page/${page}/`);
+const newer = current - 1;
+const older = current + 1;
+---
+
+{total > 1 && (
+  <nav class="pagination" aria-label="Post pages">
+    {newer >= 1 ? (
+      <a class="pagination__step" href={pageHref(newer)} rel="prev">
+        ← <span>Newer</span>
+      </a>
+    ) : (
+      <span class="pagination__step is-disabled" aria-disabled="true">
+        ← <span>Newer</span>
+      </span>
+    )}
+
+    <div class="pagination__pages">
+      {pages.map((page) =>
+        page === current ? (
+          <span class="pagination__page" aria-current="page">
+            {page}
+          </span>
+        ) : (
+          <a class="pagination__page" href={pageHref(page)} aria-label={`Page ${page}`}>
+            {page}
+          </a>
+        )
+      )}
+    </div>
+
+    {older <= total ? (
+      <a class="pagination__step" href={pageHref(older)} rel="next">
+        <span>Older</span> →
+      </a>
+    ) : (
+      <span class="pagination__step is-disabled" aria-disabled="true">
+        <span>Older</span> →
+      </span>
+    )}
+
+    <span class="sr-only">Page {current} of {total}</span>
+  </nav>
+)}

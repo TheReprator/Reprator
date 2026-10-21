@@ -1,0 +1,56 @@
+---
+---
+
+<section class="subscription" aria-label="Subscribe to new posts">
+  <p class="subscription__label" id="subscribe-label">
+    Subscribe to get future posts via email (or grab the <a href="/feed.xml">RSS feed</a>)
+  </p>
+
+  <form class="subscribe-form" action="#" method="post" data-subscribe-form>
+    <div class="subscribe-row" data-subscribe-row>
+      <label class="sr-only" for="subscriber-email">Email address</label>
+      <input
+        class="subscribe-input"
+        type="email"
+        id="subscriber-email"
+        name="email"
+        placeholder="Type your email…"
+        autocomplete="email"
+        required
+        aria-labelledby="subscribe-label"
+      />
+      <button class="subscribe-button" type="submit">Subscribe</button>
+    </div>
+    <p class="subscribe-status" role="status" tabindex="-1" data-subscribe-status hidden></p>
+  </form>
+</section>
+
+<script>
+  const forms = document.querySelectorAll<HTMLFormElement>('[data-subscribe-form]');
+
+  forms.forEach((form) => {
+    form.addEventListener('submit', (event) => {
+      event.preventDefault();
+
+      const input = form.querySelector<HTMLInputElement>('input[type="email"]');
+      const row = form.querySelector<HTMLElement>('[data-subscribe-row]');
+      const status = form.querySelector<HTMLElement>('[data-subscribe-status]');
+
+      if (!input || !row || !status) return;
+      if (!input.checkValidity()) {
+        input.reportValidity();
+        return;
+      }
+
+      row.hidden = true;
+      status.hidden = false;
+      status.textContent = '';
+
+      const email = document.createElement('strong');
+      email.textContent = input.value;
+
+      status.append('Thank you. ', email, ' is on the list.');
+      status.focus();
+    });
+  });
+</script>

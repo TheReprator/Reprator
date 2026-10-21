@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 300 300" role="img" aria-label="Mara Voss">
+  <defs>
+    <radialGradient id="glow" cx="35%" cy="24%" r="95%">
+      <stop offset="0%" stop-color="#3d5a4d"/>
+      <stop offset="100%" stop-color="#1d332c"/>
+    </radialGradient>
+    <linearGradient id="sun" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#e6a175"/>
+      <stop offset="100%" stop-color="#c76845"/>
+    </linearGradient>
+    <clipPath id="clip">
+      <circle cx="150" cy="150" r="150"/>
+    </clipPath>
+  </defs>
+
+  <g clip-path="url(#clip)">
+    <circle cx="150" cy="150" r="150" fill="url(#glow)"/>
+    <circle cx="239" cy="63" r="39" fill="url(#sun)"/>
+    <circle cx="239" cy="63" r="39" fill="none" stroke="#f3e8d8" stroke-opacity=".22"/>
+
+    <path d="M-20 218 C 55 170, 113 184, 162 211 S 271 254, 330 204" fill="none" stroke="#e7d9c4" stroke-opacity=".28" stroke-width="1.5"/>
+    <path d="M-20 236 C 55 188, 113 202, 162 229 S 271 272, 330 222" fill="none" stroke="#e7d9c4" stroke-opacity=".16" stroke-width="1.5"/>
+
+    <text x="148" y="198" fill="#f1e8da" font-family="Georgia, 'Times New Roman', serif" font-size="154" font-weight="400" letter-spacing="-10" text-anchor="middle">M</text>
+    <circle cx="58" cy="252" r="4" fill="#d98a62"/>
+  </g>
+</svg>

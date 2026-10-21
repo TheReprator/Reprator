@@ -1,0 +1,74 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import AuthorHeader from '../../components/AuthorHeader.astro';
+import ArticleBody from '../../components/ArticleBody.astro';
+import SubscribeForm from '../../components/SubscribeForm.astro';
+import SiteFooter from '../../components/SiteFooter.astro';
+import { site } from '../../data/site';
+import {
+  formatPostDate,
+  getAllPosts,
+  getAdjacentPosts,
+  type Post
+} from '../../data/posts';
+
+export function getStaticPaths() {
+  return getAllPosts().map((post) => ({
+    params: { slug: post.slug },
+    props: { post }
+  }));
+}
+
+interface Props {
+  post: Post;
+}
+
+const { post } = Astro.props;
+const { previous, next } = getAdjacentPosts(post.slug);
+---
+
+<BaseLayout
+  title={post.title}
+  description={post.excerpt}
+  ogType="article"
+  publishedTime={`${post.date}T12:00:00Z`}
+>
+  <AuthorHeader compact showBio={false} showSubscribe={false} />
+
+  <article class="article">
+    <p class="article__date">
+      <time datetime={post.date}>{formatPostDate(post.date)}</time>
+    </p>
+    <h1 class="article__title">{post.title}</h1>
+    <ArticleBody blocks={post.body} />
+  </article>
+
+  <nav class="article-nav" aria-label="More posts">
+    {previous ? (
+      <a class="article-nav__link" href={`/posts/${previous.slug}/`} rel="prev">
+        <span class="article-nav__label">Previous post</span>
+        <span class="article-nav__title">← {previous.title}</span>
+      </a>
+    ) : (
+      <span />
+    )}
+    {next ? (
+      <a class="article-nav__link article-nav__link--next" href={`/posts/${next.slug}/`} rel="next">
+        <span class="article-nav__label">Next post</span>
+        <span class="article-nav__title">{next.title} →</span>
+      </a>
+    ) : (
+      <span />
+    )}
+  </nav>
+
+  <section class="article-footer">
+    <p class="article-footer__label">About {site.name}</p>
+    <p class="bio" set:html={site.bioHtml} />
+    <SubscribeForm />
+  </section>
+
+  <p class="article-back"><a href="/">← All posts</a></p>
+
+  <SiteFooter />
+</BaseLayout>

@@ -1,0 +1,18 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+---
+
+<BaseLayout title="Page not found">
+  <section class="not-found">
+    <p class="not-found__code">404</p>
+    <h1 class="not-found__title">This page went for a walk.</h1>
+    <p class="not-found__copy">
+      The link may be old, the address may be mistyped, or the page may have
+      found a quieter place to live. The writing is still where you left it.
+    </p>
+    <a class="not-found__link" href="/">Back to all posts</a>
+  </section>
+
+  <SiteFooter />
+</BaseLayout>
