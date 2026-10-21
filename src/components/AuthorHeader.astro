@@ -1,14 +1,12 @@
 ---
-import SubscribeForm from './SubscribeForm.astro';
 import { site } from '../data/site';
 
 interface Props {
   compact?: boolean;
   showBio?: boolean;
-  showSubscribe?: boolean;
 }
 
-const { compact = false, showBio = true, showSubscribe = true } = Astro.props;
+const { compact = false, showBio = true } = Astro.props;
 ---
 
 <header class:list={['author-header', { 'author-header--compact': compact }]}>
@@ -19,7 +17,7 @@ const { compact = false, showBio = true, showSubscribe = true } = Astro.props;
   >
     <img
       class="avatar"
-      src="/avatar.svg"
+      src="/avatar.jpg"
       alt=""
       width="50"
       height="50"
@@ -29,6 +27,4 @@ const { compact = false, showBio = true, showSubscribe = true } = Astro.props;
   </a>
 
   {showBio && <p class="bio" set:html={site.bioHtml} />}
-
-  {showSubscribe && <SubscribeForm />}
 </header>

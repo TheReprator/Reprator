@@ -47,7 +47,7 @@ export const GET: APIRoute = ({ site: astroSite }) => {
     <lastBuildDate>${lastBuildDate}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml" />
     <image>
-      <url>${escapeXml(new URL('/og.jpg', base).href)}</url>
+      <url>${escapeXml(new URL('/avatar.jpg', base).href)}</url>
       <title>${escapeXml(site.title)}</title>
       <link>${escapeXml(siteUrl)}</link>
     </image>${items}

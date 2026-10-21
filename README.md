@@ -1,4 +1,4 @@
-# Mara Voss — a HEY World-inspired Astro blog
+# Reprator — a HEY World-inspired Astro blog
 
 A static, editorial personal blog built with Astro. The design follows the
 quiet, centered reading experience of [HEY World](https://world.hey.com/dhh):
@@ -101,12 +101,7 @@ image optimization.
 - Production domain: set `SITE_URL` on Vercel (falls back to Vercel's
   production domain automatically)
 - Visual system and dark mode: `src/styles/global.css`
-- Avatar and social card: `public/avatar.svg`, `public/og.jpg`
-
-The subscribe form is a front-end demo: it validates the address and shows a
-confirmation without sending data anywhere. Connect it to your newsletter
-provider by replacing the form action and removing the demo script in
-`src/components/SubscribeForm.astro`.
+- Avatar and social image: `public/avatar.jpg`
 
 ## Deploying with GitHub + Vercel
 

@@ -37,11 +37,11 @@ const lastPost = firstPost + pagePosts.length - 1;
 
 <BaseLayout
   title={`Page ${pageNumber}`}
-  description={`Page ${pageNumber} of writing by Mara Voss: notes on craft, software, and the long way around.`}
+  description={`Page ${pageNumber} of writing by Reprator: notes on craft, software, and the long way around.`}
 >
   <AuthorHeader />
 
-  <h1 class="sr-only">Writing by Mara Voss — page {pageNumber}</h1>
+  <h1 class="sr-only">Writing by Reprator — page {pageNumber}</h1>
 
   <section class="post-list" aria-label={`Posts, page ${pageNumber}`}>
     {pagePosts.map((post) => <PostCard post={post} />)}

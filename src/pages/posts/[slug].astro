@@ -1,7 +1,6 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import AuthorHeader from '../../components/AuthorHeader.astro';
-import SubscribeForm from '../../components/SubscribeForm.astro';
 import SiteFooter from '../../components/SiteFooter.astro';
 import { site } from '../../data/site';
 import {
@@ -34,7 +33,7 @@ const { Content } = post;
   ogType="article"
   publishedTime={`${post.date}T12:00:00Z`}
 >
-  <AuthorHeader compact showBio={false} showSubscribe={false} />
+  <AuthorHeader compact showBio={false} />
 
   <article class="article">
     <p class="article__date">
@@ -64,10 +63,7 @@ const { Content } = post;
   <section class="article-footer">
     <p class="article-footer__label">About {site.name}</p>
     <p class="bio" set:html={site.bioHtml} />
-    <SubscribeForm />
   </section>
-
-  <p class="article-back"><a href="/">← All posts</a></p>
 
   <SiteFooter />
 </BaseLayout>
